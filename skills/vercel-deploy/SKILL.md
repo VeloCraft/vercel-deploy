@@ -1,7 +1,6 @@
 ---
 name: vercel-deploy
-description: Query Vercel deployment status, diagnose failures, and check env vars. Activates on "deployment", "deploy", "vercel", "server error", "merge", or environment names like "staging", "production", "dev". Use when another skill needs Vercel deployment information.
-always-load: true
+description: Query Vercel deployment status, diagnose failures, and check env vars. Use when the user mentions "deployment", "deploy", "vercel", "server error", "merge", or environment names like "staging", "production", "dev". Use when another skill needs Vercel deployment information.
 ---
 
 # Vercel Deploy Skill
