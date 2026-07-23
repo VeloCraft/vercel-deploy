@@ -77,7 +77,7 @@ Do NOT re-discover on subsequent sessions. Read the file.
    ```
    vercel list --environment=<vercelTarget> --format=json --limit=5
    ```
-3. Filter results by `meta.githubCommitRef === "<branch>"`
+3. If `branch` is `"*"` (catch-all): pick the first (latest) entry without filtering. Otherwise filter by `meta.githubCommitRef === "<branch>"`
 4. Pick the first (latest) entry
 
 **Report format** — exactly 3 lines, no filler:
