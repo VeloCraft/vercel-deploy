@@ -35,7 +35,8 @@ Every project using this skill MUST have a `.vercel-environments.json` in its ro
     "dev": {
       "branch": "dev",
       "domain": "dev.example.com",
-      "vercelTarget": "preview"
+      "vercelTarget": "preview",
+      "envOverride": ".env.local"
     }
   }
 }
@@ -44,6 +45,7 @@ Every project using this skill MUST have a `.vercel-environments.json` in its ro
 - **branch**: Git branch that triggers this deployment
 - **domain**: Custom domain, or `null` for auto-gen Vercel URLs
 - **vercelTarget**: `"production"` or `"preview"` — passed to `vercel list --environment=`
+- **envOverride** (optional): A single env file whose keys override `.env` for this environment. `.env` is always the baseline and is loaded first. If absent, only `.env` is used. When the agent needs an env var value, it resolves by reading `.env` then overlaying `envOverride` — the full key set, not just a subset.
 
 ## Init Flow — First Encounter
 
@@ -52,11 +54,10 @@ If `.vercel-environments.json` doesn't exist in the project root:
 1. **Run discovery commands** in parallel:
    ```
    vercel project ls
-   vercel env ls
    vercel domains
    git branch -a
    ```
-2. **Infer the config** by matching env var scopes to branches and domains
+2. **Infer the config** by matching branches and domains
 3. **Show the inferred config** and ask: "Does this look right?"
 4. **Write `.vercel-environments.json`** after confirmation
 5. **Proceed** with the original query
@@ -111,30 +112,15 @@ If triggered by "server error" with no environment, ask which environment.
    vercel inspect <url> --logs
    ```
 3. If state is `READY` but the user reports errors: the deployment succeeded — the error is runtime, not build
-4. After build logs, check env vars:
-   ```
-   vercel env ls <vercelTarget>
-   ```
-   Compare against shared env vars (Production, Preview, Development) and environment-specific overrides. Flag any missing compared to other environments
-
-**Report**: build logs first, then env var summary. Stop after build logs + env vars — only go further if the user explicitly asks.
+**Report**: build logs only. Stop after build logs — only go further if the user explicitly asks.
 
 ## Intent: Check Env Vars
 
-**Trigger**: "what env vars are set on staging?", "diff env vars"
+**Trigger**: "what env vars are set on staging?", "show me DATABASE_URL for dev"
 
-1. Look up the environment
-2. Run:
-   ```
-   vercel env ls <vercelTarget>
-   ```
-3. Report in a compact table:
-   ```
-   Key          Staging    Production    Dev
-   DATABASE_URL    ✅          ✅         ✅
-   NOTIFY_API_KEY  ✅          ✅         ❌
-   ```
-   Show only the comparison the user asked for — don't dump all vars unless asked.
+Resolve env vars by reading the env file chain for the requested environment (`.env` baseline, then `envOverride` if set). `vercel env ls` is not used — it cannot retrieve secret values.
+
+Report only the keys the user asked about. Don't dump all vars unless explicitly asked.
 
 ## Intent: Trigger Deploy
 

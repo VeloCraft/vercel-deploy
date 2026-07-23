@@ -13,7 +13,8 @@
     "dev": {
       "branch": "dev",
       "domain": "dev.example.com",
-      "vercelTarget": "preview"
+      "vercelTarget": "preview",
+      "envOverride": ".env.local"
     }
   }
 }
