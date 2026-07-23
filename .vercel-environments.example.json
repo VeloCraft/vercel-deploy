@@ -1,0 +1,19 @@
+{
+  "environments": {
+    "production": {
+      "branch": "main",
+      "domain": "www.example.com",
+      "vercelTarget": "production"
+    },
+    "staging": {
+      "branch": "staging",
+      "domain": null,
+      "vercelTarget": "preview"
+    },
+    "dev": {
+      "branch": "dev",
+      "domain": "dev.example.com",
+      "vercelTarget": "preview"
+    }
+  }
+}

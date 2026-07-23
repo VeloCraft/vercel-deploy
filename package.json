@@ -1,0 +1,9 @@
+{
+  "name": "vercel-deploy",
+  "version": "1.0.0",
+  "description": "Pi skill for querying Vercel deployment status, diagnosing failures, and checking env vars — driven by a per-project .vercel-environments.json",
+  "keywords": ["pi-package"],
+  "pi": {
+    "skills": ["./skills"]
+  }
+}
